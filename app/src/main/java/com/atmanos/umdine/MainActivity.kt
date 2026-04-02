@@ -1,1 +1,0 @@
-// Deleted as requested. HomeMapActivity is now the main activity.

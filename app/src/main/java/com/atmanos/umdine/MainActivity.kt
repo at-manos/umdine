@@ -1,4 +1,4 @@
-package com.example.umdine
+package com.atmanos.umdine
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge

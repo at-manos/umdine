@@ -1,4 +1,4 @@
-package com.example.umdine
+package com.atmanos.umdine
 
 import org.junit.Test
 

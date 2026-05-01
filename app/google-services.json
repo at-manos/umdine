@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "126662112804",
+    "project_id": "umdine-e4164",
+    "storage_bucket": "umdine-e4164.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:126662112804:android:1ecaeccda8a8ea15b34ab1",
+        "android_client_info": {
+          "package_name": "com.atmanos.umdine"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyBxBvZ_wNOI38x7fwmEYAq-Hy04q-UK0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

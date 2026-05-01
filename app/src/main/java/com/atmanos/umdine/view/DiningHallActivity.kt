@@ -2,7 +2,6 @@ package com.atmanos.umdine.view
 
 import android.app.AlertDialog
 import android.content.DialogInterface
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -13,9 +12,11 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.atmanos.umdine.R
 import com.atmanos.umdine.model.MenuItem
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.atmanos.umdine.model.Model
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 
 /**
  * Anna Howell
@@ -25,7 +26,7 @@ import com.google.firebase.database.ValueEventListener
  */
 class DiningHallActivity : AppCompatActivity() {
     private lateinit var menuLayout : LinearLayout
-    private lateinit var menuReference : DatabaseReference
+    private lateinit var model: Model
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,95 +41,78 @@ class DiningHallActivity : AppCompatActivity() {
         // probably a plus sign next to each item?
         // floating action button
 
-        // not sure if we want users to be able to rate individual dining halls
+        model = Model(this)
+        
         menuLayout = findViewById<LinearLayout>(R.id.body)
+        findViewById<TextView>(R.id.hallName).text = HomeMapActivity.hall.displayName
 
-        // firebase stuff
-        var firebase : FirebaseDatabase = FirebaseDatabase.getInstance()
-        menuReference = firebase.getReference("dining_halls").child(HomeMapActivity.hall).child("menu")
-        var mdh : MenuDataHandler = MenuDataHandler()
-        menuReference.addValueEventListener(mdh)
+        model.observeMenu(HomeMapActivity.hall, object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.value != null) {
+                    menuLayout.removeAllViews()
+                    createMenuItems(snapshot)
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                Log.w("DiningHallActivity", "error: " + error.message)
+            }
+        })
     }
 
     fun createMenuItems(snapshot : DataSnapshot) {
         for (item in snapshot.children) {
             // make object
-            val itemKey : String = item.key
-            val menuItem : MenuItem = item.getValue(MenuItem::class.java)
+            val itemKey : String? = item.key
+            val menuItem : MenuItem? = item.getValue(MenuItem::class.java)
 
-            val row = layoutInflater.inflate(R.layout.menu_item, menuLayout, false)
-            val itemNameTV : TextView = row.findViewById<TextView>(R.id.itemName)
-            val itemRatingBar : RatingBar = row.findViewById<RatingBar>(R.id.itemRating)
-            val rateButton : Button = row.findViewById<Button>(R.id.addRating)
+            if (itemKey != null && menuItem != null) {
+                val row = layoutInflater.inflate(R.layout.menu_item, menuLayout, false)
+                val itemNameTV : TextView = row.findViewById<TextView>(R.id.itemName)
+                val itemRatingBar : RatingBar = row.findViewById<RatingBar>(R.id.itemRating)
+                val rateButton : FloatingActionButton = row.findViewById<FloatingActionButton>(R.id.addRating)
 
-            itemNameTV.text = menuItem.getName()
-            itemRatingBar.rating = menuItem.getAvgRating()
-                // code to add rating
-            rateButton.setOnClickListener { showRatingScreen(menuItem, itemKey) }
+                itemNameTV.text = menuItem.name
+                itemRatingBar.rating = menuItem.getAvgRating()
+                    // code to add rating
+                rateButton.setOnClickListener { showRatingScreen(menuItem, itemKey) }
 
-            menuLayout.addView(row)
+                menuLayout.addView(row)
+            }
         }
     }
 
     fun showRatingScreen(item : MenuItem, itemKey : String) {
-        var alert : AlertDialog.Builder = AlertDialog.Builder(this)
-        var itemRatingLayout = layoutInflater.inflate(R.layout.item_rating, null, true)
-        var addRatingBar : RatingBar = itemRatingLayout.findViewById<RatingBar>(R.id.addRatingBar)
-        var addRatingTV : TextView = itemRatingLayout.findViewById<TextView>(R.id.addRatingText)
+        val alert : AlertDialog.Builder = AlertDialog.Builder(this)
+        val itemRatingLayout = layoutInflater.inflate(R.layout.item_rating, null)
+        val addRatingBar : RatingBar = itemRatingLayout.findViewById<RatingBar>(R.id.addRatingBar)
+        val addRatingTV : TextView = itemRatingLayout.findViewById<TextView>(R.id.addRatingText)
 
         // check if rating already exists
-        var prefKey : String = HomeMapActivity.hall + "_" + itemKey
-        var prefRating : Float = HomeMapActivity.pref.getFloat(prefKey, -1.0f)
+        var prefRating = model.getUserRating(HomeMapActivity.hall, itemKey)
         // if rating doesn't exist, text should say add rating for item
         if (prefRating == -1.0f) {
-            addRatingTV.text = "Add rating for " + item.getName()
+            addRatingTV.text = "Add rating for " + item.name
         } else {
-            addRatingTV.text = "Change rating for " + item.getName()
+            addRatingTV.text = "Change rating for " + item.name
             addRatingBar.rating = prefRating
         }
 
-        var ratingListener : RatingDialog = RatingDialog(itemKey, addRatingBar, item, prefRating)
+        val ratingListener = RatingDialog(itemKey, addRatingBar)
+        alert.setView(itemRatingLayout)
         alert.setPositiveButton("Submit", ratingListener)
         alert.setNegativeButton("Cancel", ratingListener)
         alert.show()
     }
 
-    inner class MenuDataHandler : ValueEventListener {
-        override fun onDataChange(snapshot: DataSnapshot) {
-            if (snapshot.value != null) {
-                menuLayout.removeAllViews()
-                createMenuItems(snapshot)
-            }
-        }
-
-        override fun onCancelled(error: DatabaseError) {
-            Log.w("MainActivity", "error: " + error.message)
-        }
-    }
-
-    inner class RatingDialog(var itemKey : String, var addRatingBar : RatingBar, var item : MenuItem, var prefRating : Float) : DialogInterface.OnClickListener {
+    inner class RatingDialog(var itemKey : String, var addRatingBar : RatingBar) : DialogInterface.OnClickListener {
         override fun onClick(p0: DialogInterface?, p1: Int) {
             if (p1 == -1) {
                 // submit rating
-                var stars : Float = addRatingBar.rating
-                var itemReference = menuReference.child(itemKey)
-
-                // if already rated, need to subtract old and add new
-                if (prefRating == -1.0f) {
-                    item.addRating(stars)
-                }
-                else {
-                    item.changeRating(prefRating, stars)
-                }
-                itemReference.setValue(item)
-                var prefKey : String = HomeMapActivity.hall + "_" + itemKey
-                var editor : SharedPreferences.Editor = HomeMapActivity.pref.edit()
-                editor.putFloat(prefKey, stars)
-                editor.commit()
+                val stars : Float = addRatingBar.rating
+                model.submitRating(HomeMapActivity.hall, itemKey, stars)
             } else if (p1 == -2) {
                 p0!!.dismiss()
             }
         }
     }
-
 }

@@ -1,59 +1,29 @@
 package com.atmanos.umdine.model
 
+import com.google.firebase.database.IgnoreExtraProperties
+
 /**
  * Anna Howell
  * Class for storing information about a specific menu item
  * and calculating the average rating
  */
-class MenuItem {
-    private var name : String = ""
-    private var numRatings : Int = 0
-    private var numStars : Float = 0.0f // can be half a star
-
-    constructor(name : String, numRatings: Int, numStars : Float) {
-        this.name = name
-        this.numRatings = numRatings
-        this.numStars = numStars
-    }
-
-    fun getName() : String {
-        return name
-    }
-
-    fun getNumRatings() : Int {
-        return numRatings
-    }
-
-    fun getNumStars() : Float {
-        return numStars
-    }
-
-    fun setName(name : String) {
-        this.name = name
-    }
-
-    fun setNumRatings(numRatings : Int) {
-        this.numRatings = numRatings
-    }
-
-    fun setNumStars(numStars : Float) {
-        this.numStars = numStars
-    }
-
-    fun changeRating(from : Float, to : Float) {
+@IgnoreExtraProperties
+data class MenuItem(
+    var name: String = "",
+    var numRatings: Int = 0,
+    var numStars: Float = 0.0f,
+    var dietaryTags: List<String> = emptyList()
+) {
+    fun changeRating(from: Float, to: Float) {
         numStars = (numStars - from) + to
     }
 
-    fun getAvgRating() : Float {
-        var avgRating : Float = 0.0f
-        if (numRatings != 0) {
-            avgRating = numStars / numRatings
-        }
-        return avgRating
-    }
+    fun getAvgRating(): Float = if (numRatings > 0) numStars / numRatings else 0.0f
 
-    fun addRating(stars : Float) {
+    fun addRating(stars: Float) {
         numRatings += 1
         numStars += stars
     }
+
+    fun hasTag(tag: String): Boolean = dietaryTags.any { it.equals(tag, ignoreCase = true) }
 }

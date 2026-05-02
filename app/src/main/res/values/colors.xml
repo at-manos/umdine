@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- UMD colors -->
+    <color name="umd_red">#E03A3E</color>
+    <color name="umd_gold">#FFD200</color>
+
+    <!-- Backgrounds -->
+    <color name="background_light">#FAFAFA</color>
+    <color name="background_dark">#121212</color>
+    <color name="surface_light">#FFFFFF</color>
+    <color name="surface_dark">#1E1E1E</color>
+
+    <!-- Text -->
+    <color name="text_primary_light">#1A1A1A</color>
+    <color name="text_primary_dark">#F5F5F5</color>
+    <color name="text_secondary_light">#616161</color>
+    <color name="text_secondary_dark">#B0B0B0</color>
+
+    <!-- Utility -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="error">#B00020</color>
+    <color name="divider">#E0E0E0</color>
 </resources>

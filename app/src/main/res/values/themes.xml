@@ -1,10 +1,56 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!--
-      NAME
+      Suhani Patel
       TODO: Styling - Theme, fonts, etc.
     -->
     <style name="Base.Theme.Umdine" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/umd_red</item>
+        <item name="colorPrimaryVariant">@color/umd_red</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <!-- Secondary color (UMD Gold) -->
+        <item name="colorSecondary">@color/umd_gold</item>
+        <item name="colorSecondaryVariant">@color/umd_gold</item>
+        <item name="colorOnSecondary">@color/black</item>
+
+        <!-- Background -->
+        <item name="android:colorBackground">@color/background_light</item>
+        <item name="colorSurface">@color/surface_light</item>
+        <item name="colorOnSurface">@color/text_primary_light</item>
+
+        <!-- Error -->
+        <item name="colorError">@color/error</item>
+
+        <!-- ToolBar style -->
+        <item name="toolbarStyle">@style/Widget.Umdine.Toolbar</item>
+
+        <!-- Buttons -->
+        <item name="materialButtonStyle">@style/Widget.Umdine.Button</item>
+
+        <!-- RatingBar -->
+        <item name="ratingBarStyle">@style/Widget.Umdine.RatingBar</item>
     </style>
 
     <style name="Theme.Umdine" parent="Base.Theme.Umdine" />
+
+    <!-- Toolbar Red background with gold title -->
+    <style name="Widget.Umdine.Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="android:background">@color/umd_red</item>
+        <item name="titleTextColor">@color/white</item>
+        <item name="subtitleTextColor">@color/umd_gold</item>
+    </style>
+
+    <!-- Buttons -->
+    <style name="Widget.Umdine.Button" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/umd_gold</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textStyle">bold</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
+    <!-- RatingBar tinted UMD gold -->
+    <style name="Widget.Umdine.RatingBar" parent="Widget.AppCompat.RatingBar">
+        <item name="colorControlNormal">@color/divider</item>
+        <item name="colorControlActivated">@color/umd_gold</item>
+    </style>
 </resources>

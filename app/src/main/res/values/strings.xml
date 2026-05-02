@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">Umdine</string>
-    <string name="title_home_map">Home Map</string>
+    <string name="app_name">UMDine</string>
+    <string name="title_home_map">Home</string>
     <string name="title_dining_hall">Dining Hall</string>
     <string name="title_preferences">Preferences</string>
 </resources>

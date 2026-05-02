@@ -149,4 +149,8 @@ data class DiningHall(
     var longitude: Double = 0.0,
     var current_busyness: Int = 0,
     var menu: Map<String, MenuItem> = emptyMap()
-)
+) {
+    fun totalReviews(): Int {
+        return menu.values.sumOf { it.numRatings }
+    }
+}

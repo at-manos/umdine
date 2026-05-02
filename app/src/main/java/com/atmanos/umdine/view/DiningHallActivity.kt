@@ -1,5 +1,6 @@
 package com.atmanos.umdine.view
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
@@ -23,11 +24,13 @@ import com.google.firebase.database.DatabaseError
  * TODO: Details about a specific dining hall
  * TODO: Menu with a RatingBar for each menu item (OnRatingBarChangeListener)
  * TODO: User ratings with a SeekBar for submitting wait time (OnSeekBarChangeListener)
+ * add search bar for items
  */
 class DiningHallActivity : AppCompatActivity() {
     private lateinit var menuLayout : LinearLayout
     private lateinit var model: Model
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dining_hall)
@@ -43,7 +46,7 @@ class DiningHallActivity : AppCompatActivity() {
 
         model = Model(this)
         
-        menuLayout = findViewById<LinearLayout>(R.id.body)
+        menuLayout = findViewById<LinearLayout>(R.id.menuItems)
         findViewById<TextView>(R.id.hallName).text = HomeMapActivity.hall.displayName
 
         model.observeMenu(HomeMapActivity.hall, object : ValueEventListener {

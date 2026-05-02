@@ -1,14 +1,16 @@
-<LinearLayout android:layout_width="match_parent"
+<RelativeLayout android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:gravity="center"
     xmlns:android="http://schemas.android.com/apk/res/android">
+
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="item name"
-        android:id="@+id/itemName"/>
-
+        android:id="@+id/itemName"
+        android:layout_toLeftOf="@id/itemRating"
+        android:layout_centerVertical="true"/>
     <RatingBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,13 +18,16 @@
         android:scaleY="0.6"
         android:isIndicator="true"
         android:stepSize="0.5"
-        android:id="@+id/itemRating"/>
+        android:id="@+id/itemRating"
+        android:layout_centerInParent="true"/>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="Add rating"
+        android:layout_toRightOf="@id/itemRating"
         android:scaleX="0.7"
         android:scaleY="0.7"
         android:src="@drawable/add_reaction"
         android:id="@+id/addRating"/>
-</LinearLayout>
+</RelativeLayout>

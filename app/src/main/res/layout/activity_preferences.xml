@@ -44,21 +44,28 @@
             app:selectionRequired="false">
 
             <com.google.android.material.chip.Chip
-                android:id="@+id/chipVegan"
+                android:id="@+id/chipDairy"
                 style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Vegan" />
+                android:text="Dairy-Free" />
 
             <com.google.android.material.chip.Chip
-                android:id="@+id/chipVegetarian"
+                android:id="@+id/chipEgg"
                 style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Vegetarian" />
+                android:text="Egg-Free" />
 
             <com.google.android.material.chip.Chip
-                android:id="@+id/chipGlutenFree"
+                android:id="@+id/chipFish"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fish-Free" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipGluten"
                 style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -72,18 +79,46 @@
                 android:text="Halal" />
 
             <com.google.android.material.chip.Chip
-                android:id="@+id/chipDairyFree"
-                style="@style/Widget.Material3.Chip.Filter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Dairy-Free" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipNutFree"
+                android:id="@+id/chipNuts"
                 style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Nut-Free" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipSesame"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sesame-Free" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipShellfish"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Shellfish-Free" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipSoy"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Soy-Free" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipVegan"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vegan" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipVegetarian"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vegetarian" />
 
         </com.google.android.material.chip.ChipGroup>
 

@@ -16,12 +16,17 @@ class PreferencesActivity : BaseActivity() {
     private lateinit var emptyFavoritesText: TextView
 
     private val chipMap = mapOf(
-        R.id.chipVegan to "Vegan",
-        R.id.chipVegetarian to "Vegetarian",
-        R.id.chipGlutenFree to "Gluten-Free",
+        R.id.chipDairy to "Dairy-Free",
+        R.id.chipEgg to "Egg-Free",
+        R.id.chipFish to "Fish-Free",
+        R.id.chipGluten to "Gluten-Free",
         R.id.chipHalal to "Halal",
-        R.id.chipDairyFree to "Dairy-Free",
-        R.id.chipNutFree to "Nut-Free"
+        R.id.chipNuts to "Nut-Free",
+        R.id.chipSesame to "Sesame-Free",
+        R.id.chipShellfish to "Shellfish-Free",
+        R.id.chipSoy to "Soy-Free",
+        R.id.chipVegan to "Vegan",
+        R.id.chipVegetarian to "Vegetarian"
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

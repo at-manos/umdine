@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.RatingBar
 import android.widget.TextView
@@ -74,7 +75,21 @@ class DiningHallActivity : AppCompatActivity() {
 
                 itemNameTV.text = menuItem.name
                 itemRatingBar.rating = menuItem.getAvgRating()
-                    // code to add rating
+
+                val favoriteButton: ImageButton = row.findViewById(R.id.favoriteButton)
+                val dishId = "${HomeMapActivity.hall.id}_${itemKey}"
+                favoriteButton.setImageResource(
+                    if (model.getFavorites().contains(dishId)) R.drawable.ic_favorite
+                    else R.drawable.ic_favorite_border
+                )
+                favoriteButton.setOnClickListener {
+                    model.toggleFavorite(dishId)
+                    favoriteButton.setImageResource(
+                        if (model.getFavorites().contains(dishId)) R.drawable.ic_favorite
+                        else R.drawable.ic_favorite_border
+                    )
+                }
+
                 rateButton.setOnClickListener { showRatingScreen(menuItem, itemKey) }
 
                 menuLayout.addView(row)

@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.RatingBar
 import android.widget.TextView
@@ -104,6 +105,9 @@ class HomeMapActivity : AppCompatActivity(), OnMapReadyCallback {
         findViewById<Button>(R.id.btn251North).setOnClickListener {
             hall = DiningHallId.NORTH_251
             startActivity(Intent(this, DiningHallActivity::class.java))
+        }
+        findViewById<ImageButton>(R.id.btnPreferences).setOnClickListener {
+            startActivity(Intent(this, PreferencesActivity::class.java))
         }
     }
 

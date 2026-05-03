@@ -86,13 +86,22 @@ class DiningHallActivity : BaseActivity() {
             var nextBool = false
 
 
-            val dietaryRestrictions = model.getDietaryRestrictions()
+            val dietaryRestrictions : Set<String> = model.getDietaryRestrictions()
             for (r in dietaryRestrictions) {
-                if (!menuItem!!.hasTag(r)) {
-                    nextBool = true
-                    break
+                if (r == "vegan" || r == "vegetarian" || r == "halal") {
+                    if (!menuItem!!.hasTag(r)) {
+                        nextBool = true
+                        break
+                    }
+                }
+                else {
+                    if (menuItem!!.hasTag(r)) {
+                        nextBool = true
+                        break
+                    }
                 }
             }
+
             if (nextBool) {
                 continue
             }

@@ -59,6 +59,10 @@ class DiningHallActivity : BaseActivity() {
         updateWaitTime()
 
         waitTimeButton.setOnClickListener { showWaitTimeScreen() }
+        val backButton: FloatingActionButton = findViewById(R.id.backButton)
+        backButton.setOnClickListener {
+            finish()
+        }
 
         model.observeMenu(HomeMapActivity.hall, object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -76,8 +80,31 @@ class DiningHallActivity : BaseActivity() {
     fun createMenuItems(snapshot : DataSnapshot) {
         for (item in snapshot.children) {
             // make object
+            // if prefs don't match user prefs then don't show?
             val itemKey : String? = item.key
             val menuItem : MenuItem? = item.getValue(MenuItem::class.java)
+            var nextBool = false
+
+
+            val dietaryRestrictions : Set<String> = model.getDietaryRestrictions()
+            for (r in dietaryRestrictions) {
+                if (r == "vegan" || r == "vegetarian" || r == "halal") {
+                    if (!menuItem!!.hasTag(r)) {
+                        nextBool = true
+                        break
+                    }
+                }
+                else {
+                    if (menuItem!!.hasTag(r)) {
+                        nextBool = true
+                        break
+                    }
+                }
+            }
+
+            if (nextBool) {
+                continue
+            }
 
             if (itemKey != null && menuItem != null) {
                 val row = layoutInflater.inflate(R.layout.menu_item, menuLayout, false)

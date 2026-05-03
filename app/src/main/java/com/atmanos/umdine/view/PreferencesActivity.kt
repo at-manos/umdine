@@ -5,12 +5,11 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import com.atmanos.umdine.R
 import com.atmanos.umdine.model.Model
 import com.google.android.material.chip.Chip
 
-class PreferencesActivity : AppCompatActivity() {
+class PreferencesActivity : BaseActivity() {
 
     private lateinit var model: Model
     private lateinit var favoritesContainer: LinearLayout

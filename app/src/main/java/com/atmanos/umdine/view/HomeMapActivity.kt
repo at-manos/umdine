@@ -1,8 +1,11 @@
 package com.atmanos.umdine.view
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.location.Location
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -10,7 +13,8 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.RatingBar
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import com.atmanos.umdine.R
 import com.atmanos.umdine.model.DiningHall
 import com.atmanos.umdine.model.DiningHallId
@@ -18,6 +22,8 @@ import com.atmanos.umdine.model.Model
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -27,28 +33,34 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import java.util.Locale
 
 /**
  * Aiden Manos
  * Home page with map and banner ad
  */
-class HomeMapActivity : AppCompatActivity(), OnMapReadyCallback {
+class HomeMapActivity : BaseActivity(), OnMapReadyCallback {
 
     private lateinit var model: Model
     private var map: GoogleMap? = null
     private var halls: List<DiningHall> = emptyList()
     private lateinit var adView: AdView
+    private lateinit var flpc: FusedLocationProviderClient
+    private var userLocation: Location? = null
+    private val markers = mutableMapOf<String, Marker>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_map)
 
         model = Model(this)
+        flpc = LocationServices.getFusedLocationProviderClient(this)
 
         setupAd()
         setupButtons()
         loadDiningHalls()
         setupMap()
+        requestLocation()
     }
 
     private fun setupAd() {
@@ -68,7 +80,7 @@ class HomeMapActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun loadDiningHalls() {
         model.getDiningHalls { fetchedHalls ->
             halls = fetchedHalls
-            updateButtonColors()
+            updateButtonUI()
             updateMap()
         }
     }
@@ -76,6 +88,32 @@ class HomeMapActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun setupMap() {
         val fragment = supportFragmentManager.findFragmentById(R.id.map)
         (fragment as SupportMapFragment).getMapAsync(this)
+    }
+
+    private fun requestLocation() {
+        val launcher =
+            registerForActivityResult(
+                ActivityResultContracts.RequestPermission()
+            ) { granted ->
+                if (granted) requestLocation()
+            }
+        val fine = ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+
+        if (!fine) {
+            launcher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            return
+        }
+        map?.isMyLocationEnabled = true
+        flpc.lastLocation.addOnSuccessListener { location ->
+            if (location != null) {
+                userLocation = location
+                updateButtonUI()
+                showClosestHallInfo()
+            }
+        }
     }
 
     override fun onPause() {
@@ -123,7 +161,17 @@ class HomeMapActivity : AppCompatActivity(), OnMapReadyCallback {
             true
         }
         currentMap.setInfoWindowAdapter(createInfoWindowAdapter())
-        currentMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(38.9869, -76.9426), 14f))
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            currentMap.isMyLocationEnabled = true
+        }
 
         updateMap()
     }
@@ -163,7 +211,7 @@ class HomeMapActivity : AppCompatActivity(), OnMapReadyCallback {
         }.toMap()
     }
 
-    private fun updateButtonColors() {
+    private fun updateButtonUI() {
         val hallColors = hallColors()
 
         halls.forEach { hallItem ->
@@ -173,10 +221,21 @@ class HomeMapActivity : AppCompatActivity(), OnMapReadyCallback {
                 DiningHallId.NORTH_251.id -> R.id.btn251North
                 else -> null
             }
-
             buttonId?.let { id ->
+                val button = findViewById<Button>(id)
                 val color = hallColors[hallItem.id] ?: return@let
-                findViewById<Button>(id).backgroundTintList = ColorStateList.valueOf(color)
+                button.backgroundTintList = ColorStateList.valueOf(color)
+                val distance = userLocation?.let { loc ->
+                    val hallLoc = Location("").apply {
+                        latitude = hallItem.latitude
+                        longitude = hallItem.longitude
+                    }
+                    val meters = loc.distanceTo(hallLoc)
+                    val miles = meters / 1609.3
+                    String.format(Locale.getDefault(), "%.1fmi away", miles)
+                }
+                val displayName = DiningHallId.fromId(hallItem.id)?.displayName ?: hallItem.name
+                button.text = if (distance != null) "$displayName ($distance)" else displayName
             }
         }
     }
@@ -186,6 +245,8 @@ class HomeMapActivity : AppCompatActivity(), OnMapReadyCallback {
         if (halls.isEmpty()) return
 
         currentMap.clear()
+        markers.clear()
+
         val boundsBuilder = LatLngBounds.Builder()
         var hasPoints = false
         val hallColors = hallColors()
@@ -201,6 +262,7 @@ class HomeMapActivity : AppCompatActivity(), OnMapReadyCallback {
             currentMap.setOnMapLoadedCallback {
                 val padding = 260
                 currentMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding))
+                showClosestHallInfo()
             }
         }
     }
@@ -220,13 +282,31 @@ class HomeMapActivity : AppCompatActivity(), OnMapReadyCallback {
                 .strokeColor(Color.BLACK)
                 .strokeWidth(3f)
         )
-        currentMap.addMarker(
+        val marker = currentMap.addMarker(
             MarkerOptions()
                 .position(loc)
                 .title(hallItem.name)
                 .alpha(0f)
         )
+        if (marker != null) {
+            markers[hallItem.id] = marker
+        }
         boundsBuilder.include(loc)
+    }
+    private fun showClosestHallInfo() {
+        val loc = userLocation ?: return
+        val curMap = map ?: return
+        if (halls.isEmpty() || markers.isEmpty()) return
+        val closestHall = halls.minByOrNull { hallItem ->
+            val hallLoc = Location("").apply {
+                latitude = hallItem.latitude
+                longitude = hallItem.longitude
+            }
+            loc.distanceTo(hallLoc)
+        }
+        closestHall?.let {
+            markers[it.id]?.showInfoWindow()
+        }
     }
 
     companion object {

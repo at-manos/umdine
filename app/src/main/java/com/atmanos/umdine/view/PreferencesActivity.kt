@@ -8,6 +8,7 @@ import android.widget.TextView
 import com.atmanos.umdine.R
 import com.atmanos.umdine.model.Model
 import com.google.android.material.chip.Chip
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class PreferencesActivity : BaseActivity() {
 
@@ -36,6 +37,11 @@ class PreferencesActivity : BaseActivity() {
         model = Model(this)
         favoritesContainer = findViewById(R.id.favoritesContainer)
         emptyFavoritesText = findViewById(R.id.emptyFavoritesText)
+
+        val backButton: FloatingActionButton = findViewById(R.id.prefBackButton)
+        backButton.setOnClickListener {
+            finish()
+        }
 
         loadDietaryRestrictions()
         setupChipListeners()

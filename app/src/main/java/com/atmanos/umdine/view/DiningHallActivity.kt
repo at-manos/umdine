@@ -80,8 +80,22 @@ class DiningHallActivity : BaseActivity() {
     fun createMenuItems(snapshot : DataSnapshot) {
         for (item in snapshot.children) {
             // make object
+            // if prefs don't match user prefs then don't show?
             val itemKey : String? = item.key
             val menuItem : MenuItem? = item.getValue(MenuItem::class.java)
+            var nextBool = false
+
+
+            val dietaryRestrictions = model.getDietaryRestrictions()
+            for (r in dietaryRestrictions) {
+                if (!menuItem!!.hasTag(r)) {
+                    nextBool = true
+                    break
+                }
+            }
+            if (nextBool) {
+                continue
+            }
 
             if (itemKey != null && menuItem != null) {
                 val row = layoutInflater.inflate(R.layout.menu_item, menuLayout, false)

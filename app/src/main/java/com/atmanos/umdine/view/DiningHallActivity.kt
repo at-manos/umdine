@@ -2,16 +2,20 @@ package com.atmanos.umdine.view
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.widget.LinearLayout
 import android.widget.RatingBar
+import android.widget.SeekBar
 import android.widget.TextView
 import com.atmanos.umdine.R
+import com.atmanos.umdine.model.DiningHall
 import com.atmanos.umdine.model.MenuItem
 import com.atmanos.umdine.model.Model
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.slider.Slider
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -21,10 +25,12 @@ import com.google.firebase.database.DatabaseError
  * TODO: Details about a specific dining hall
  * TODO: Menu with a RatingBar for each menu item (OnRatingBarChangeListener)
  * TODO: User ratings with a SeekBar for submitting wait time (OnSeekBarChangeListener)
- * add search bar for items
+ *
  */
 class DiningHallActivity : BaseActivity() {
     private lateinit var menuLayout : LinearLayout
+    private lateinit var waitTimeText : TextView
+    private lateinit var waitTimeButton : FloatingActionButton
     private lateinit var model: Model
 
     @SuppressLint("MissingInflatedId")
@@ -45,6 +51,13 @@ class DiningHallActivity : BaseActivity() {
         
         menuLayout = findViewById<LinearLayout>(R.id.menuItems)
         findViewById<TextView>(R.id.hallName).text = HomeMapActivity.hall.displayName
+        waitTimeText = findViewById<TextView>(R.id.waitTimeText)
+        waitTimeButton = findViewById<FloatingActionButton>(R.id.waitTimeButton)
+
+        // get current wait time
+        updateWaitTime()
+
+        waitTimeButton.setOnClickListener { showWaitTimeScreen() }
 
         model.observeMenu(HomeMapActivity.hall, object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -104,6 +117,35 @@ class DiningHallActivity : BaseActivity() {
         alert.show()
     }
 
+    @SuppressLint("MissingInflatedId")
+    fun showWaitTimeScreen() {
+        val alert : AlertDialog.Builder = AlertDialog.Builder(this)
+        val waitTimeLayout = layoutInflater.inflate(R.layout.wait_time, null)
+        val addWaitTimeTV : TextView = waitTimeLayout.findViewById<TextView>(R.id.addWaitTimeText)
+        val slider : Slider = waitTimeLayout.findViewById<Slider>(R.id.slider)
+        val sliderStatusTV : TextView = waitTimeLayout.findViewById<TextView>(R.id.sliderStatus)
+
+        addWaitTimeTV.text = "Submit the current wait time for " + HomeMapActivity.hall.displayName
+        slider.addOnChangeListener { _, value, _ ->
+            sliderStatusTV.text = value.toInt().toString() + " min."
+        }
+
+        val waitTimeListener : WaitTimeDialog = WaitTimeDialog(slider)
+        alert.setView(waitTimeLayout)
+        alert.setPositiveButton("Submit", waitTimeListener)
+        alert.setNegativeButton("Cancel", waitTimeListener)
+        alert.show()
+    }
+
+    fun updateWaitTime() {
+        model.getDiningHalls{ diningHalls ->
+            var diningHall : DiningHall? = diningHalls.find { it.id == HomeMapActivity.hall.id }
+            if (diningHall != null) {
+                waitTimeText.text = diningHall.current_busyness.toString() + " min."
+            }
+        }
+    }
+
     inner class RatingDialog(var itemKey : String, var addRatingBar : RatingBar) : DialogInterface.OnClickListener {
         override fun onClick(p0: DialogInterface?, p1: Int) {
             if (p1 == -1) {
@@ -114,5 +156,18 @@ class DiningHallActivity : BaseActivity() {
                 p0!!.dismiss()
             }
         }
+    }
+
+    inner class WaitTimeDialog(var slider : Slider) : DialogInterface.OnClickListener {
+        override fun onClick(p0: DialogInterface?, p1: Int) {
+            if (p1 == -1) {
+                // submit rating
+                model.submitWaitTime(HomeMapActivity.hall, slider.value.toInt())
+                updateWaitTime()
+            } else if (p1 == -2) {
+                p0!!.dismiss()
+            }
+        }
+
     }
 }

@@ -20,6 +20,37 @@
             android:gravity="center_horizontal"
             android:id="@+id/hallName"
             />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal">
+            <TextView
+                android:text="Current Wait Time: "
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/waitTimeLabel"
+                android:layout_gravity="center_vertical"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/waitTimeText"
+                android:textStyle="bold"/>
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="Edit wait time"
+                android:scaleX="0.5"
+                android:scaleY="0.5"
+                android:src="@drawable/edit_time"
+                android:id="@+id/waitTimeButton"/>
+
+
+
+        </LinearLayout>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

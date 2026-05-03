@@ -1,0 +1,27 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit the current wait time for "
+        android:id="@+id/addWaitTimeText"/>
+
+    <com.google.android.material.slider.Slider
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:stepSize="5"
+        android:valueFrom="0"
+        android:valueTo="60"
+        android:paddingTop="50dp"
+        android:id="@+id/slider"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:id="@+id/sliderStatus"/>
+</LinearLayout>

@@ -1,33 +1,45 @@
-<RelativeLayout android:layout_width="match_parent"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:gravity="center"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:gravity="center_vertical"
+    android:padding="4dp">
+
+    <ImageButton
+        android:id="@+id/favoriteButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_favorite_border"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Toggle favorite"
+        android:scaleX="0.8"
+        android:scaleY="0.8" />
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="item name"
         android:id="@+id/itemName"
-        android:layout_toLeftOf="@id/itemRating"
-        android:layout_centerVertical="true"/>
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="item name" />
+
     <RatingBar
+        android:id="@+id/itemRating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:scaleX="0.6"
         android:scaleY="0.6"
         android:isIndicator="true"
-        android:stepSize="0.5"
-        android:id="@+id/itemRating"
-        android:layout_centerInParent="true"/>
+        android:stepSize="0.5" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addRating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="Add rating"
-        android:layout_toRightOf="@id/itemRating"
         android:scaleX="0.7"
         android:scaleY="0.7"
-        android:src="@drawable/add_reaction"
-        android:id="@+id/addRating"/>
-</RelativeLayout>
+        android:src="@drawable/add_reaction" />
+
+</LinearLayout>

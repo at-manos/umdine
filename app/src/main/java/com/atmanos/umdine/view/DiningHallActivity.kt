@@ -8,7 +8,6 @@ import android.util.Log
 import android.widget.LinearLayout
 import android.widget.RatingBar
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import com.atmanos.umdine.R
 import com.atmanos.umdine.model.MenuItem
 import com.atmanos.umdine.model.Model
@@ -24,7 +23,7 @@ import com.google.firebase.database.DatabaseError
  * TODO: User ratings with a SeekBar for submitting wait time (OnSeekBarChangeListener)
  * add search bar for items
  */
-class DiningHallActivity : AppCompatActivity() {
+class DiningHallActivity : BaseActivity() {
     private lateinit var menuLayout : LinearLayout
     private lateinit var model: Model
 

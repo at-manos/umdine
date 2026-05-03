@@ -44,6 +44,7 @@ dependencies {
     implementation(libs.firebase.analytics)
 
     implementation(libs.play.services.maps)
+    implementation(libs.play.services.location)
     implementation(libs.play.services.tasks)
     implementation(libs.play.services.ads)
 

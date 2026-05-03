@@ -10,7 +10,6 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.RatingBar
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import com.atmanos.umdine.R
 import com.atmanos.umdine.model.DiningHall
 import com.atmanos.umdine.model.DiningHallId
@@ -32,7 +31,7 @@ import com.google.android.gms.maps.model.MarkerOptions
  * Aiden Manos
  * Home page with map and banner ad
  */
-class HomeMapActivity : AppCompatActivity(), OnMapReadyCallback {
+class HomeMapActivity : BaseActivity(), OnMapReadyCallback {
 
     private lateinit var model: Model
     private var map: GoogleMap? = null

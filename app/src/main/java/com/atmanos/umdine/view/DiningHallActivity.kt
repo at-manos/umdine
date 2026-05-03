@@ -58,6 +58,10 @@ class DiningHallActivity : BaseActivity() {
         updateWaitTime()
 
         waitTimeButton.setOnClickListener { showWaitTimeScreen() }
+        val backButton: FloatingActionButton = findViewById(R.id.backButton)
+        backButton.setOnClickListener {
+            finish()
+        }
 
         model.observeMenu(HomeMapActivity.hall, object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {

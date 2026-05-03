@@ -3,6 +3,7 @@ package com.atmanos.umdine.view
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.atmanos.umdine.R
+import com.atmanos.umdine.model.Model
 
 /**
  * NAME

@@ -184,6 +184,7 @@ class HomeMapActivity : BaseActivity(), OnMapReadyCallback {
                 val hallItem = halls.find { it.name == marker.title } ?: return View(this@HomeMapActivity)
                 val view = layoutInflater.inflate(R.layout.map_info_window, null)
                 view.findViewById<TextView>(R.id.infoTitle).text = marker.title
+                view.findViewById<TextView>(R.id.infoWait).text = "${hallItem.current_busyness} min"
 
                 view.findViewById<RatingBar>(R.id.infoRating).rating = averageRatingFor(hallItem)
                 return view
@@ -199,16 +200,29 @@ class HomeMapActivity : BaseActivity(), OnMapReadyCallback {
     }
 
     private fun hallColors(): Map<String, Int> {
-        val rankedHalls = halls.sortedByDescending { it.totalReviews() }
-        val colors = listOf(
-            Color.rgb(255, 187, 187),
-            Color.rgb(255, 255, 224),
-            Color.rgb(152, 251, 152)
-        )
+        return halls.associate { it.id to getWaitTimeColor(it.current_busyness) }
+    }
 
-        return rankedHalls.mapIndexed { index, hallItem ->
-            hallItem.id to colors.getOrElse(index) { colors.last() }
-        }.toMap()
+    private fun getWaitTimeColor(waitTime: Int): Int {
+        val clampedTime = waitTime.coerceIn(0, 60)
+        val green = Color.rgb(152, 251, 152)
+        val yellow = Color.rgb(255, 255, 224)
+        val red = Color.rgb(255, 187, 187)
+
+        return if (clampedTime <= 30) {
+            val ratio = clampedTime / 30f
+            lerpColor(green, yellow, ratio)
+        } else {
+            val ratio = (clampedTime - 30) / 30f
+            lerpColor(yellow, red, ratio)
+        }
+    }
+
+    private fun lerpColor(color1: Int, color2: Int, ratio: Float): Int {
+        val r = (Color.red(color1) + ratio * (Color.red(color2) - Color.red(color1))).toInt()
+        val g = (Color.green(color1) + ratio * (Color.green(color2) - Color.green(color1))).toInt()
+        val b = (Color.blue(color1) + ratio * (Color.blue(color2) - Color.blue(color1))).toInt()
+        return Color.rgb(r, g, b)
     }
 
     private fun updateButtonUI() {

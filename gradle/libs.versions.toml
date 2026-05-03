@@ -13,6 +13,7 @@ playServicesAds = "25.2.0"
 playServicesMaps = "19.0.0"
 playServicesMapsVersion = "20.0.0"
 playServicesTasks = "18.2.0"
+firebaseDatabaseKtx = "22.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -31,6 +32,7 @@ play-services-tasks = { group = "com.google.android.gms", name = "play-services-
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-database = { group = "com.google.firebase", name = "firebase-database" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
+firebase-database-ktx = { group = "com.google.firebase", name = "firebase-database-ktx", version.ref = "firebaseDatabaseKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

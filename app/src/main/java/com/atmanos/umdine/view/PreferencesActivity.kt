@@ -9,7 +9,10 @@ import com.atmanos.umdine.R
  * TODO: Favorite dishes
  * TODO: Dietary restrictions
  */
-class PreferencesActivity : AppCompatActivity() {
+class PreferencesActivity : BaseActivity() {
+    
+    private lateinit var model: Model
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_preferences)

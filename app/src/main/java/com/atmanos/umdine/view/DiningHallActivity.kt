@@ -6,13 +6,10 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
-import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.RatingBar
 import android.widget.SeekBar
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import com.atmanos.umdine.R
 import com.atmanos.umdine.model.DiningHall
 import com.atmanos.umdine.model.MenuItem
@@ -30,7 +27,7 @@ import com.google.firebase.database.DatabaseError
  * TODO: User ratings with a SeekBar for submitting wait time (OnSeekBarChangeListener)
  *
  */
-class DiningHallActivity : AppCompatActivity() {
+class DiningHallActivity : BaseActivity() {
     private lateinit var menuLayout : LinearLayout
     private lateinit var waitTimeText : TextView
     private lateinit var waitTimeButton : FloatingActionButton

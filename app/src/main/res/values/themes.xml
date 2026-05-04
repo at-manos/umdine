@@ -29,6 +29,10 @@
 
         <!-- RatingBar -->
         <item name="ratingBarStyle">@style/Widget.Umdine.RatingBar</item>
+
+        <item name="chipStyle">@style/Widget.Umdine.Chip</item>
+
+        <item name="floatingActionButtonStyle">@style/Widget.Umdine.FAB</item>
     </style>
 
     <style name="Theme.Umdine" parent="Base.Theme.Umdine" />
@@ -41,11 +45,16 @@
     </style>
 
     <!-- Buttons -->
-    <style name="Widget.Umdine.Button" parent="Widget.Material3.Button">
+    <style name="Widget.Umdine.Button" parent="Widget.Material3.Button.Icon">
         <item name="backgroundTint">@color/umd_gold</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textStyle">bold</item>
         <item name="cornerRadius">8dp</item>
+    </style>
+
+    <style name="Widget.Umdine.FAB" parent="Widget.Material3.FloatingActionButton.Primary">
+        <item name="backgroundTint">@color/umd_red</item>
+        <item name="tint">@color/white</item>
     </style>
 
     <!-- RatingBar tinted UMD gold -->
@@ -53,4 +62,10 @@
         <item name="colorControlNormal">@color/divider</item>
         <item name="colorControlActivated">@color/umd_gold</item>
     </style>
+
+    <style name="Widget.Umdine.Chip" parent="Widget.Material3.Chip.Filter">
+        <item name="chipBackgroundColor">@color/background_light</item>
+        <item name="checkedIconTint">@color/umd_red</item>
+    </style>
+
 </resources>

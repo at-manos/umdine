@@ -48,6 +48,12 @@ class HomeMapActivity : BaseActivity(), OnMapReadyCallback {
     private lateinit var flpc: FusedLocationProviderClient
     private var userLocation: Location? = null
     private val markers = mutableMapOf<String, Marker>()
+    private val launcher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { granted ->
+            if (granted) fetchLocation()
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,21 +97,30 @@ class HomeMapActivity : BaseActivity(), OnMapReadyCallback {
     }
 
     private fun requestLocation() {
-        val launcher =
-            registerForActivityResult(
-                ActivityResultContracts.RequestPermission()
-            ) { granted ->
-                if (granted) requestLocation()
-            }
         val fine = ActivityCompat.checkSelfPermission(
             this,
             Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
-
         if (!fine) {
             launcher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
             return
         }
+        fetchLocation()
+    }
+    private fun fetchLocation() {
+        if (
+            ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+
         map?.isMyLocationEnabled = true
         flpc.lastLocation.addOnSuccessListener { location ->
             if (location != null) {
